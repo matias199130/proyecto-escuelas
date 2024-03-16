@@ -1,0 +1,61 @@
+<!-- views/alumnos.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Alumnos</title>
+  <script>
+    function createAlumno() {
+        const nombre = document.getElementById('nombre').value;
+        const apellido = document.getElementById('apellido').value;
+        const edad = document.getElementById('edad').value;
+        const curso = document.getElementById('curso').value;
+
+        const data = { nombre, apellido, edad, curso };
+
+        fetch('/api/crearAlumno', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.mensaje) {
+                    alert(data.mensaje);
+                }
+            })
+            .catch(error => {
+                console.error('Error al crear alumno:', error);
+                alert('Error al crear alumno');
+            });
+    }
+</script>
+</head>
+<body>
+  <h1>Lista de Alumnos</h1>
+  <ul>
+    <% alumnos.forEach(alumno => { %>
+      <li><%= alumno.nombre %> <%= alumno.apellido %> - Edad: <%= alumno.edad %>, Curso: <%= alumno.curso %></li>
+    <% }); %>
+  </ul>
+  <h2>Agregar Nuevo Alumno</h2>
+  <form action="/agregar-alumno" method="POST">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br>
+
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido" name="apellido" required><br>
+
+    <label for="edad">Edad:</label>
+    <input type="number" id="edad" name="edad" required><br>
+
+    <label for="curso">Curso:</label>
+    <input type="text" id="curso" name="curso" required><br>
+
+    <button type="submit">Agregar Alumno</button>
+  </form>
+</body>
+</html>
